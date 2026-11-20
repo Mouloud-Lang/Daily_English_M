@@ -1,0 +1,1526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>Daily Life, Routines & Time: 26 Flashcards & Practice</title>
+  <style>
+    :root {
+      --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #ff758c 100%);
+      --card-front: rgba(255, 255, 255, 0.96);
+      --card-back: linear-gradient(135deg, #1e1e2f 0%, #2d2b55 100%);
+      --text-dark: #1f2937;
+      --text-light: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      width: 100%;
+      max-width: 100%;
+      overflow-x: hidden;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-gradient);
+      min-height: 100vh;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 14px;
+      color: var(--text-light);
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 10px;
+      width: 100%;
+      max-width: 540px;
+    }
+
+    .badge {
+      display: inline-block;
+      background: rgba(255, 255, 255, 0.22);
+      backdrop-filter: blur(8px);
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      margin-bottom: 6px;
+      max-width: 100%;
+    }
+
+    h1 {
+      font-size: clamp(1.35rem, 5vw, 1.65rem);
+      font-weight: 800;
+      text-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      line-height: 1.2;
+    }
+
+    .mode-switch {
+      display: flex;
+      background: rgba(0, 0, 0, 0.22);
+      padding: 4px;
+      border-radius: 16px;
+      margin: 10px auto 8px;
+      width: 100%;
+      max-width: 500px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      gap: 4px;
+    }
+
+    .mode-btn {
+      flex: 1;
+      min-width: 0;
+      padding: 9px 6px;
+      border-radius: 12px;
+      font-family: inherit;
+      font-size: clamp(0.72rem, 2.9vw, 0.84rem);
+      font-weight: 700;
+      color: rgba(255, 255, 255, 0.88);
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      line-height: 1.2;
+      word-wrap: break-word;
+    }
+
+    .mode-btn.active {
+      background: #ffffff;
+      color: #4f46e5;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+    }
+
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 6px;
+      margin-bottom: 10px;
+      width: 100%;
+      max-width: 540px;
+    }
+
+    .filter-btn {
+      font-family: inherit;
+      background: rgba(255, 255, 255, 0.2);
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .filter-btn:hover {
+      background: rgba(255, 255, 255, 0.32);
+    }
+
+    .filter-btn.active {
+      background: #ffffff;
+      color: #5b21b6;
+      border-color: #ffffff;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .progress-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      max-width: 470px;
+      margin-bottom: 12px;
+    }
+
+    .progress-bar {
+      flex: 1;
+      height: 8px;
+      background: rgba(255, 255, 255, 0.25);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: #00f5d4;
+      border-radius: 999px;
+      transition: width 0.35s ease;
+    }
+
+    .counter {
+      font-size: 0.82rem;
+      font-weight: 700;
+      min-width: 58px;
+      text-align: right;
+    }
+
+    .view-section {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* FLASHCARD SCENE */
+    .scene {
+      width: 100%;
+      max-width: 470px;
+      height: 360px;
+      perspective: 1200px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .card {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transition: transform 0.65s cubic-bezier(0.34, 1.56, 0.64, 1);
+      transform-style: preserve-3d;
+    }
+
+    .card.is-flipped {
+      transform: rotateY(180deg);
+    }
+
+    .card-face {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      border-radius: 24px;
+      padding: 20px 18px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+      overflow: hidden;
+    }
+
+    .card-front {
+      background: var(--card-front);
+      color: var(--text-dark);
+      border: 2px solid rgba(255, 255, 255, 0.9);
+    }
+
+    .top-tags {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      right: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .pos-tag {
+      background: #ede9fe;
+      color: #6d28d9;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 999px;
+    }
+
+    .type-tag {
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 999px;
+    }
+
+    .type-topic {
+      background: #dcfce7;
+      color: #15803d;
+    }
+
+    .type-glue {
+      background: #e0e7ff;
+      color: #4338ca;
+    }
+
+    .front-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.3px;
+      color: #6b7280;
+      margin-bottom: 6px;
+    }
+
+    .word-front {
+      font-size: clamp(1.85rem, 8vw, 2.55rem);
+      font-weight: 800;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      line-height: 1.2;
+      padding: 0 6px;
+      word-break: break-word;
+      max-width: 100%;
+    }
+
+    .tap-hint {
+      position: absolute;
+      bottom: 12px;
+      left: 12px;
+      right: 12px;
+      font-size: 0.72rem;
+      color: #9ca3af;
+      font-weight: 600;
+    }
+
+    /* BACK SIDE */
+    .card-back {
+      background: var(--card-back);
+      color: var(--text-light);
+      transform: rotateY(180deg);
+      border: 2px solid rgba(255, 255, 255, 0.15);
+      justify-content: center;
+      padding-bottom: 32px;
+    }
+
+    .back-icon {
+      font-size: 2.6rem;
+      line-height: 1;
+      margin-bottom: 8px;
+      filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.3));
+      font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+    }
+
+    .back-def {
+      font-size: clamp(0.9rem, 3.6vw, 1.02rem);
+      font-weight: 600;
+      color: #f3f4f6;
+      line-height: 1.38;
+      max-width: 100%;
+      margin-bottom: 10px;
+    }
+
+    .back-example {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      padding: 8px 12px;
+      border-radius: 12px;
+      font-size: clamp(0.8rem, 3.2vw, 0.88rem);
+      color: #d1fae5;
+      line-height: 1.35;
+      max-width: 100%;
+      margin-bottom: 10px;
+    }
+
+    .back-example strong {
+      color: #00f5d4;
+      font-weight: 700;
+    }
+
+    .back-ru {
+      background: rgba(0, 245, 212, 0.16);
+      border: 1px solid rgba(0, 245, 212, 0.42);
+      color: #00f5d4;
+      font-size: clamp(0.95rem, 3.8vw, 1.12rem);
+      font-weight: 800;
+      padding: 5px 14px;
+      border-radius: 999px;
+      line-height: 1.25;
+      max-width: 100%;
+    }
+
+    .btn-listen {
+      margin-top: 10px;
+      background: rgba(255, 255, 255, 0.18);
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      color: #ffffff;
+      font-family: inherit;
+      font-size: 0.85rem;
+      font-weight: 700;
+      padding: 6px 14px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.15s ease;
+    }
+
+    .btn-listen:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    .btn-listen:active {
+      transform: scale(0.96);
+    }
+
+    .controls {
+      margin-top: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      width: 100%;
+      max-width: 470px;
+    }
+
+    button.action-btn {
+      font-family: inherit;
+      border: none;
+      border-radius: 14px;
+      padding: 12px 12px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.15s ease, background 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      min-width: 0;
+    }
+
+    button.action-btn:active {
+      transform: scale(0.96);
+    }
+
+    .btn-nav {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.94);
+      color: var(--text-dark);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .btn-nav:hover {
+      background: #ffffff;
+    }
+
+    .btn-shuffle {
+      background: rgba(255, 255, 255, 0.2);
+      color: #ffffff;
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      padding-left: 14px;
+      padding-right: 14px;
+    }
+
+    .btn-shuffle:hover {
+      background: rgba(255, 255, 255, 0.32);
+    }
+
+    /* PRACTICE MODE */
+    .test-type-switch {
+      display: flex;
+      background: #f3f4f6;
+      padding: 4px;
+      border-radius: 12px;
+      margin-bottom: 12px;
+      gap: 4px;
+    }
+
+    .test-type-btn {
+      flex: 1;
+      min-width: 0;
+      font-family: inherit;
+      padding: 8px 6px;
+      border-radius: 9px;
+      border: none;
+      background: transparent;
+      color: #4b5563;
+      font-size: clamp(0.72rem, 2.9vw, 0.8rem);
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .test-type-btn.active {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: #ffffff;
+      box-shadow: 0 3px 8px rgba(102, 126, 234, 0.3);
+    }
+
+    .quiz-card {
+      width: 100%;
+      max-width: 470px;
+      background: var(--card-front);
+      color: var(--text-dark);
+      border-radius: 24px;
+      padding: 18px 16px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+      text-align: center;
+      position: relative;
+    }
+
+    .stats-bar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 10px;
+      font-size: 0.74rem;
+      font-weight: 700;
+    }
+
+    .stat-pill {
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: #f3f4f6;
+      color: #374151;
+    }
+
+    .stat-score {
+      background: #dcfce7;
+      color: #15803d;
+    }
+
+    .stat-streak {
+      background: #fef3c7;
+      color: #b45309;
+    }
+
+    .quiz-icon {
+      font-size: 2.4rem;
+      line-height: 1;
+      margin: 2px 0 6px;
+    }
+
+    .quiz-prompt-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.9px;
+      color: #6366f1;
+      margin-bottom: 4px;
+    }
+
+    .quiz-def {
+      font-size: clamp(0.95rem, 3.8vw, 1.06rem);
+      font-weight: 700;
+      color: #1f2937;
+      line-height: 1.42;
+      margin-bottom: 14px;
+      padding: 0 6px;
+    }
+
+    .quiz-def.sentence-prompt {
+      background: #eef2ff;
+      border: 1.5px solid #c7d2fe;
+      border-radius: 14px;
+      padding: 12px 14px;
+      font-weight: 600;
+      color: #1e1b4b;
+    }
+
+    .blank-slot {
+      display: inline-block;
+      min-width: 78px;
+      border-bottom: 2.5px solid #4f46e5;
+      color: #4f46e5;
+      font-weight: 800;
+      padding: 0 4px;
+    }
+
+    .mcq-options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .mcq-btn {
+      font-family: inherit;
+      padding: 11px 8px;
+      font-size: 0.86rem;
+      font-weight: 700;
+      background: #f9fafb;
+      color: #1f2937;
+      border: 2px solid #e5e7eb;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      word-break: break-word;
+    }
+
+    .mcq-btn:hover:not(:disabled) {
+      border-color: #667eea;
+      background: #eef2ff;
+    }
+
+    .mcq-btn.correct {
+      background: #dcfce7;
+      border-color: #10b981;
+      color: #065f46;
+    }
+
+    .mcq-btn.wrong {
+      background: #fee2e2;
+      border-color: #ef4444;
+      color: #991b1b;
+    }
+
+    .answer-input {
+      width: 100%;
+      padding: 12px 14px;
+      font-family: inherit;
+      font-size: 16px;
+      font-weight: 700;
+      text-align: center;
+      border: 2.5px solid #d1d5db;
+      border-radius: 14px;
+      outline: none;
+      color: #1f2937;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .answer-input:focus {
+      border-color: #667eea;
+      box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.2);
+    }
+
+    .answer-input.correct {
+      border-color: #10b981;
+      background: #ecfdf5;
+      color: #065f46;
+    }
+
+    .answer-input.wrong {
+      border-color: #ef4444;
+      background: #fef2f2;
+      color: #991b1b;
+    }
+
+    .feedback-box {
+      min-height: 40px;
+      margin-top: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.84rem;
+      font-weight: 600;
+      border-radius: 12px;
+      padding: 6px 10px;
+    }
+
+    .feedback-correct {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .feedback-wrong {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .quiz-actions {
+      margin-top: 12px;
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-primary {
+      flex: 2;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: #ffffff;
+      box-shadow: 0 8px 18px rgba(102, 126, 234, 0.35);
+    }
+
+    .btn-primary:hover {
+      opacity: 0.95;
+    }
+
+    .btn-secondary {
+      flex: 1;
+      background: #f3f4f6;
+      color: #374151;
+    }
+
+    .btn-secondary:hover {
+      background: #e5e7eb;
+    }
+
+    .summary-box h2 {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #1f2937;
+      margin-bottom: 6px;
+    }
+
+    .summary-score {
+      font-size: 2.3rem;
+      font-weight: 800;
+      color: #6d28d9;
+      margin: 8px 0;
+    }
+
+    .summary-text {
+      font-size: 0.9rem;
+      color: #4b5563;
+      margin-bottom: 16px;
+    }
+
+    .keyboard-tips {
+      margin-top: 12px;
+      font-size: 0.74rem;
+      opacity: 0.88;
+      text-align: center;
+    }
+
+    kbd {
+      background: rgba(255, 255, 255, 0.22);
+      padding: 2px 6px;
+      border-radius: 6px;
+      font-family: inherit;
+      font-weight: 600;
+    }
+
+    @media (hover: none) and (pointer: coarse) {
+      .keyboard-tips {
+        display: none;
+      }
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 10px 12px;
+        justify-content: flex-start;
+        padding-top: 16px;
+      }
+
+      .scene {
+        height: 330px;
+      }
+
+      .card-face {
+        padding: 16px 14px;
+        border-radius: 20px;
+      }
+
+      .quiz-card {
+        padding: 16px 14px;
+        border-radius: 20px;
+      }
+    }
+
+    @media (max-width: 350px) {
+      .mcq-options {
+        grid-template-columns: 1fr;
+      }
+
+      .stats-bar {
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <span class="badge">Daily Life, Routines &amp; Time • 26 Words</span>
+    <h1>Vocabulary Flashcards</h1>
+
+    <div class="mode-switch">
+      <button type="button" class="mode-btn active" id="tabTopic">📅 Topic (18)</button>
+      <button type="button" class="mode-btn" id="tabGlue">🔗 Glue (8)</button>
+      <button type="button" class="mode-btn" id="tabPractice">🎯 Practice (26)</button>
+    </div>
+  </div>
+
+  <div class="filters hidden" id="practiceFilterBar">
+    <button type="button" class="filter-btn active" data-filter="all">All (26)</button>
+    <button type="button" class="filter-btn" data-filter="topic">Topic (18)</button>
+    <button type="button" class="filter-btn" data-filter="glue">Glue (8)</button>
+  </div>
+
+  <div class="progress-wrapper">
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+    <div class="counter" id="counter">1 / 18</div>
+  </div>
+
+  <div class="view-section" id="flashcardsView">
+    <div class="scene" id="cardScene" title="Click to flip">
+      <div class="card" id="flashcard">
+        <div class="card-face card-front">
+          <div class="top-tags">
+            <span class="pos-tag" id="posTag">noun</span>
+            <span class="type-tag type-topic" id="typeTag">Topic Word</span>
+          </div>
+          <div class="front-label">English Word</div>
+          <div class="word-front" id="wordFront">appointment</div>
+          <div class="tap-hint">👆 Tap card to see meaning &amp; translation</div>
+        </div>
+
+        <div class="card-face card-back">
+          <div class="back-icon" id="backIcon">🩺</div>
+          <div class="back-def" id="backDef">A planned meeting with a doctor, client, or specialist.</div>
+          <div class="back-example" id="backExample">"I have a dentist <strong>appointment</strong> at 3 PM."</div>
+          <div class="back-ru" id="backRu">встреча / запись на приём</div>
+          <button type="button" class="btn-listen" id="listenBtn">🔊 Listen</button>
+          <div class="tap-hint" style="color: rgba(255,255,255,0.55);">👆 Tap to flip back</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="controls">
+      <button type="button" class="action-btn btn-nav" id="prevBtn">← Prev</button>
+      <button type="button" class="action-btn btn-shuffle" id="shuffleBtn" title="Shuffle Cards">🔀</button>
+      <button type="button" class="action-btn btn-nav" id="nextBtn">Next →</button>
+    </div>
+
+    <div class="keyboard-tips">
+      Shortcuts: <kbd>Space</kbd> Flip &nbsp;•&nbsp; <kbd>←</kbd> <kbd>→</kbd> Navigate
+    </div>
+  </div>
+
+  <div class="view-section hidden" id="practiceView">
+    <div class="quiz-card">
+      <div class="test-type-switch">
+        <button type="button" class="test-type-btn active" id="typeMcqBtn">1️⃣ Choose Word</button>
+        <button type="button" class="test-type-btn" id="typeWriteBtn">2️⃣ Write Word</button>
+      </div>
+
+      <div class="stats-bar">
+        <span class="stat-pill stat-score" id="scoreDisplay">✅ Score: 0</span>
+        <span class="stat-pill" id="quizTag">noun • Topic</span>
+        <span class="stat-pill stat-streak" id="streakDisplay">🔥 Streak: 0</span>
+      </div>
+
+      <div id="questionArea">
+        <div class="quiz-icon" id="quizIcon">🩺</div>
+        <div class="quiz-prompt-label" id="quizPromptLabel">Definition</div>
+        <div class="quiz-def" id="quizDef">A planned meeting with a doctor, client, or specialist.</div>
+
+        <div class="mcq-options" id="mcqOptions"></div>
+
+        <input
+          type="text"
+          id="answerInput"
+          class="answer-input hidden"
+          placeholder="Type the English word..."
+          autocomplete="off"
+          autocapitalize="none"
+          spellcheck="false"
+        />
+
+        <div class="feedback-box" id="feedbackBox"></div>
+
+        <div class="quiz-actions">
+          <button type="button" class="action-btn btn-secondary" id="quizShuffleBtn" title="Shuffle Order">🔀 Shuffle</button>
+          <button type="button" class="action-btn btn-primary" id="submitBtn">Skip →</button>
+        </div>
+      </div>
+
+      <div id="summaryArea" class="summary-box hidden">
+        <h2>🎉 Practice Complete!</h2>
+        <div class="summary-score" id="finalScore">0 / 26</div>
+        <p class="summary-text" id="summaryMessage">Great job practicing Daily Life, Routines &amp; Time!</p>
+        <div class="quiz-actions">
+          <button type="button" class="action-btn btn-secondary" id="retryMissedBtn">Practice Missed</button>
+          <button type="button" class="action-btn btn-primary" id="restartTestBtn">Restart Full</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="keyboard-tips">
+      Press <kbd>Enter</kbd> to check your answer or move to the next card
+    </div>
+  </div>
+
+  <script>
+    const allWords = [
+      // 18 TOPIC WORDS
+      {
+        word: "appointment",
+        pos: "noun",
+        cat: "topic",
+        icon: "🩺",
+        def: "A planned meeting with a doctor, client, or specialist.",
+        ex: 'I have a dentist <strong>appointment</strong> at 3 PM.',
+        ru: "встреча / запись на приём"
+      },
+      {
+        word: "chore",
+        pos: "noun",
+        cat: "topic",
+        icon: "🧹",
+        def: "A boring daily job at home, like cleaning or washing dishes.",
+        ex: 'I do all my household <strong>chores</strong> on Saturday.',
+        ru: "домашняя обязанность"
+      },
+      {
+        word: "errand",
+        pos: "noun",
+        cat: "topic",
+        icon: "🛍️",
+        def: "A short trip to do a small task, like going to the bank.",
+        ex: 'I need to run a quick <strong>errand</strong> at the post office.',
+        ru: "мелкое поручение / дело"
+      },
+      {
+        word: "leisure",
+        pos: "noun",
+        cat: "topic",
+        icon: "🌿",
+        def: "Free time when you are not working.",
+        ex: 'She enjoys reading books in her <strong>leisure</strong> time.',
+        ru: "досуг / свободное время"
+      },
+      {
+        word: "occasion",
+        pos: "noun",
+        cat: "topic",
+        icon: "🥂",
+        def: "A special event or important celebration.",
+        ex: 'We only buy expensive wine for a special <strong>occasion</strong>.',
+        ru: "особый случай / событие"
+      },
+      {
+        word: "shift",
+        pos: "noun",
+        cat: "topic",
+        icon: "🕒",
+        def: "A set period of work hours, such as day or night work.",
+        ex: 'My sister works the night <strong>shift</strong> at the hospital.',
+        ru: "рабочая смена"
+      },
+      {
+        word: "postpone",
+        pos: "verb",
+        cat: "topic",
+        icon: "⏭️",
+        def: "To move an event to a later time or date.",
+        ex: 'Let’s <strong>postpone</strong> our meeting until Friday.',
+        ru: "отложить / перенести"
+      },
+      {
+        word: "remind",
+        pos: "verb",
+        cat: "topic",
+        icon: "🔔",
+        def: "To help someone remember something important.",
+        ex: 'Please <strong>remind</strong> me to call the client at noon.',
+        ru: "напоминать"
+      },
+      {
+        word: "stay up",
+        pos: "phrasal verb",
+        cat: "topic",
+        icon: "🌙",
+        def: "To go to bed later than usual.",
+        ex: 'We <strong>stayed up</strong> until midnight watching a movie.',
+        ru: "не ложиться спать допоздна"
+      },
+      {
+        word: "oversleep",
+        pos: "verb",
+        cat: "topic",
+        icon: "⏰",
+        def: "To sleep longer than you planned and wake up late.",
+        ex: 'I forgot to set my alarm and <strong>overslept</strong>.',
+        ru: "проспать"
+      },
+      {
+        word: "look forward to",
+        pos: "phrasal verb",
+        cat: "topic",
+        icon: "✈️",
+        def: "To feel excited about something nice in the future.",
+        ex: 'I really <strong>look forward to</strong> my summer vacation.',
+        ru: "ждать с нетерпением"
+      },
+      {
+        word: "available",
+        pos: "adjective",
+        cat: "topic",
+        icon: "✅",
+        def: "Free to meet, talk, or be used.",
+        ex: 'Are you <strong>available</strong> for a quick chat at 4 PM?',
+        ru: "свободный / доступный"
+      },
+      {
+        word: "punctual",
+        pos: "adjective",
+        cat: "topic",
+        icon: "⌚",
+        def: "Always arriving on time, never late.",
+        ex: 'She is very <strong>punctual</strong> and arrives five minutes early.',
+        ru: "пунктуальный"
+      },
+      {
+        word: "nowadays",
+        pos: "adverb",
+        cat: "topic",
+        icon: "💻",
+        def: "At the present time, compared with the past.",
+        ex: '<strong>Nowadays</strong>, many adults work remotely from home.',
+        ru: "в наши дни / сейчас"
+      },
+      {
+        word: "commitment",
+        pos: "noun",
+        cat: "topic",
+        icon: "🤝",
+        def: "A promise or serious obligation that takes your time.",
+        ex: 'Joining a volunteer board is a big weekly <strong>commitment</strong>.',
+        ru: "обязательство / серьёзная договорённость"
+      },
+      {
+        word: "aftermath",
+        pos: "noun",
+        cat: "topic",
+        icon: "🌪️",
+        def: "The period and consequences after an intense or difficult event.",
+        ex: 'In the <strong>aftermath</strong> of the conference, everyone felt exhausted.',
+        ru: "последствия (после напряжённого события)"
+      },
+      {
+        word: "workload",
+        pos: "noun",
+        cat: "topic",
+        icon: "📊",
+        def: "The total amount of work a person has to do.",
+        ex: 'Because two colleagues left, my <strong>workload</strong> doubled.',
+        ru: "рабочая нагрузка / объём работы"
+      },
+      {
+        word: "hectic pace",
+        pos: "noun phrase",
+        cat: "topic",
+        icon: "⚡",
+        def: "A very fast, busy, and stressful speed of daily life.",
+        ex: 'Many people get burned out by the <strong>hectic pace</strong> of city life.',
+        ru: "бешеный ритм / суматошный темп"
+      },
+
+      // 8 GLUE WORDS (B1 Gap-fill sentences using Topic Words in Practice)
+      {
+        word: "although",
+        pos: "connector",
+        cat: "glue",
+        icon: "⚖️",
+        def: "Used to show a surprising contrast between two ideas.",
+        ex: '<strong>Although</strong> it was raining, we went for a walk.',
+        quizSentence: '______ I had a heavy workload this week, I still finished all my household chores on Saturday.',
+        ru: "хотя / несмотря на то что"
+      },
+      {
+        word: "therefore",
+        pos: "connector",
+        cat: "glue",
+        icon: "➡️",
+        def: "For that reason; as a logical result.",
+        ex: 'I overslept; <strong>therefore</strong>, I missed the morning bus.',
+        quizSentence: 'I stayed up too late and overslept this morning; ______, I missed my 9 AM dentist appointment.',
+        ru: "поэтому / следовательно"
+      },
+      {
+        word: "even though",
+        pos: "connector",
+        cat: "glue",
+        icon: "💪",
+        def: "A stronger way to say 'although' for a clear contrast.",
+        ex: 'She smiled <strong>even though</strong> she was very tired.',
+        quizSentence: 'She arrived early and was completely punctual ______ she had finished a long night shift at the hospital.',
+        ru: "даже несмотря на то что"
+      },
+      {
+        word: "meanwhile",
+        pos: "connector",
+        cat: "glue",
+        icon: "⏱️",
+        def: "At the same time while something else is happening.",
+        ex: 'I cooked dinner; <strong>meanwhile</strong>, he set the table.',
+        quizSentence: 'I went to the bank to run a quick errand; ______, my sister stayed home to prepare dinner for the special occasion.',
+        ru: "тем временем"
+      },
+      {
+        word: "instead",
+        pos: "adverb",
+        cat: "glue",
+        icon: "🔄",
+        def: "In place of something else.",
+        ex: 'I didn’t take the car; I walked to work <strong>instead</strong>.',
+        quizSentence: 'We decided to postpone our afternoon meeting and spend some quiet leisure time in the park ______.',
+        ru: "вместо этого"
+      },
+      {
+        word: "besides",
+        pos: "connector",
+        cat: "glue",
+        icon: "➕",
+        def: "In addition to that; also.",
+        ex: 'I don’t want to go out. <strong>Besides</strong>, it’s too late.',
+        quizSentence: 'I cannot take on another weekly commitment right now. ______, I am already struggling with the hectic pace of my job.',
+        ru: "кроме того / к тому же"
+      },
+      {
+        word: "however",
+        pos: "connector",
+        cat: "glue",
+        icon: "🔀",
+        def: "Used to introduce an opposite idea in a new sentence.",
+        ex: 'The job pays well. <strong>However</strong>, the hours are long.',
+        quizSentence: 'I really look forward to seeing you tomorrow. ______, please remind me if you are not available at 4 PM.',
+        ru: "однако / тем не менее"
+      },
+      {
+        word: "despite",
+        pos: "preposition",
+        cat: "glue",
+        icon: "🛡️",
+        def: "Without being stopped by a problem (used before a noun).",
+        ex: '<strong>Despite</strong> the heavy traffic, we arrived on time.',
+        quizSentence: '______ the stressful aftermath of the conference, many people nowadays still enjoy working in big cities.',
+        ru: "несмотря на"
+      }
+    ];
+
+    let activeSection = "topic";
+    let activeDeck = allWords.filter(w => w.cat === "topic");
+    let currentIndex = 0;
+    let isFlipped = false;
+
+    // Practice Mode State
+    let practiceFilter = "all";
+    let testType = "mcq";
+    let quizDeck = [...allWords];
+    let quizIndex = 0;
+    let score = 0;
+    let streak = 0;
+    let answered = false;
+    let missedWords = [];
+
+    const tabTopic = document.getElementById("tabTopic");
+    const tabGlue = document.getElementById("tabGlue");
+    const tabPractice = document.getElementById("tabPractice");
+    const practiceFilterBar = document.getElementById("practiceFilterBar");
+    const filterButtons = document.querySelectorAll(".filter-btn");
+    const counter = document.getElementById("counter");
+    const progressFill = document.getElementById("progressFill");
+
+    const flashcardsView = document.getElementById("flashcardsView");
+    const practiceView = document.getElementById("practiceView");
+    const cardScene = document.getElementById("cardScene");
+    const flashcard = document.getElementById("flashcard");
+    const posTag = document.getElementById("posTag");
+    const typeTag = document.getElementById("typeTag");
+    const wordFront = document.getElementById("wordFront");
+    const backIcon = document.getElementById("backIcon");
+    const backDef = document.getElementById("backDef");
+    const backExample = document.getElementById("backExample");
+    const backRu = document.getElementById("backRu");
+    const listenBtn = document.getElementById("listenBtn");
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    const shuffleBtn = document.getElementById("shuffleBtn");
+
+    const typeMcqBtn = document.getElementById("typeMcqBtn");
+    const typeWriteBtn = document.getElementById("typeWriteBtn");
+    const scoreDisplay = document.getElementById("scoreDisplay");
+    const streakDisplay = document.getElementById("streakDisplay");
+    const quizTag = document.getElementById("quizTag");
+    const quizIcon = document.getElementById("quizIcon");
+    const quizPromptLabel = document.getElementById("quizPromptLabel");
+    const quizDef = document.getElementById("quizDef");
+    const mcqOptions = document.getElementById("mcqOptions");
+    const answerInput = document.getElementById("answerInput");
+    const feedbackBox = document.getElementById("feedbackBox");
+    const submitBtn = document.getElementById("submitBtn");
+    const quizShuffleBtn = document.getElementById("quizShuffleBtn");
+    const questionArea = document.getElementById("questionArea");
+    const summaryArea = document.getElementById("summaryArea");
+    const finalScore = document.getElementById("finalScore");
+    const summaryMessage = document.getElementById("summaryMessage");
+    const retryMissedBtn = document.getElementById("retryMissedBtn");
+    const restartTestBtn = document.getElementById("restartTestBtn");
+
+    function speakWord(text) {
+      if (!("speechSynthesis" in window)) return;
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = "en-US";
+      utterance.rate = 0.92;
+      utterance.pitch = 1.0;
+
+      const voices = window.speechSynthesis.getVoices();
+      const usVoice =
+        voices.find(v => (v.lang === "en-US" || v.lang === "en_US") && /Google US English|Aria|Jenny|Samantha|Natural/i.test(v.name)) ||
+        voices.find(v => v.lang === "en-US" || v.lang === "en_US");
+
+      if (usVoice) {
+        utterance.voice = usVoice;
+      }
+
+      window.speechSynthesis.speak(utterance);
+    }
+
+    if ("speechSynthesis" in window && window.speechSynthesis.onvoiceschanged !== undefined) {
+      window.speechSynthesis.onvoiceschanged = () => {
+        window.speechSynthesis.getVoices();
+      };
+    }
+
+    function updateProgress(idx, total) {
+      counter.textContent = `${idx + 1} / ${total}`;
+      const pct = ((idx + 1) / total) * 100;
+      progressFill.style.width = `${pct}%`;
+    }
+
+    function renderFlashcard() {
+      const item = activeDeck[currentIndex];
+      posTag.textContent = item.pos;
+      wordFront.textContent = item.word;
+      backIcon.textContent = item.icon;
+      backDef.textContent = item.def;
+      backExample.innerHTML = `"${item.ex}"`;
+      backRu.textContent = item.ru;
+
+      if (item.cat === "topic") {
+        typeTag.textContent = "Topic Word";
+        typeTag.className = "type-tag type-topic";
+      } else {
+        typeTag.textContent = "Glue Word";
+        typeTag.className = "type-tag type-glue";
+      }
+
+      updateProgress(currentIndex, activeDeck.length);
+    }
+
+    function flipCard() {
+      isFlipped = !isFlipped;
+      flashcard.classList.toggle("is-flipped", isFlipped);
+      if (isFlipped) {
+        speakWord(activeDeck[currentIndex].word);
+      }
+    }
+
+    function changeCard(dir) {
+      if (isFlipped) {
+        isFlipped = false;
+        flashcard.classList.remove("is-flipped");
+        setTimeout(() => {
+          currentIndex = (currentIndex + dir + activeDeck.length) % activeDeck.length;
+          renderFlashcard();
+        }, 180);
+      } else {
+        currentIndex = (currentIndex + dir + activeDeck.length) % activeDeck.length;
+        renderFlashcard();
+      }
+    }
+
+    function shuffleArray(arr) {
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+    }
+
+    function getFilteredPracticeWords(filter) {
+      if (filter === "all") return [...allWords];
+      return allWords.filter(w => w.cat === filter);
+    }
+
+    function startQuiz(customList = null) {
+      quizDeck = customList ? [...customList] : getFilteredPracticeWords(practiceFilter);
+      quizIndex = 0;
+      score = 0;
+      streak = 0;
+      missedWords = [];
+      answered = false;
+
+      questionArea.classList.remove("hidden");
+      summaryArea.classList.add("hidden");
+      updateQuizStats();
+      renderQuizQuestion();
+    }
+
+    function updateQuizStats() {
+      scoreDisplay.textContent = `✅ Score: ${score}`;
+      streakDisplay.textContent = `🔥 Streak: ${streak}`;
+    }
+
+    function renderQuizQuestion() {
+      const item = quizDeck[quizIndex];
+      answered = false;
+      quizIcon.textContent = item.icon;
+      quizTag.textContent = `${item.pos} • ${item.cat === "topic" ? "Topic" : "Glue"}`;
+      feedbackBox.className = "feedback-box";
+      feedbackBox.innerHTML = "";
+
+      if (item.cat === "glue" && item.quizSentence) {
+        quizPromptLabel.textContent = "Complete the B1 Sentence";
+        quizDef.className = "quiz-def sentence-prompt";
+        quizDef.innerHTML = item.quizSentence.replace("______", '<span class="blank-slot">______</span>');
+      } else {
+        quizPromptLabel.textContent = "Definition";
+        quizDef.className = "quiz-def";
+        quizDef.textContent = item.def;
+      }
+
+      if (testType === "mcq") {
+        mcqOptions.classList.remove("hidden");
+        answerInput.classList.add("hidden");
+        submitBtn.textContent = "Skip →";
+
+        const sameCategoryPool = allWords.filter(w => w.word !== item.word && w.cat === item.cat);
+        const distractorPool = sameCategoryPool.length >= 3
+          ? sameCategoryPool
+          : allWords.filter(w => w.word !== item.word);
+
+        shuffleArray(distractorPool);
+        const choices = [item, ...distractorPool.slice(0, 3)];
+        shuffleArray(choices);
+
+        mcqOptions.innerHTML = "";
+        choices.forEach(choice => {
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "mcq-btn";
+          btn.textContent = choice.word;
+          btn.addEventListener("click", () => handleMcqAnswer(btn, choice.word === item.word, item));
+          mcqOptions.appendChild(btn);
+        });
+      } else {
+        mcqOptions.classList.add("hidden");
+        answerInput.classList.remove("hidden");
+        answerInput.value = "";
+        answerInput.className = "answer-input";
+        answerInput.disabled = false;
+        answerInput.placeholder = item.cat === "glue" ? "Type the missing glue word..." : "Type the English word...";
+        submitBtn.textContent = "Check Answer";
+        setTimeout(() => answerInput.focus(), 50);
+      }
+
+      updateProgress(quizIndex, quizDeck.length);
+    }
+
+    function revealFilledSentence(currentItem) {
+      if (currentItem.cat === "glue" && currentItem.quizSentence) {
+        const formattedAnswer = currentItem.quizSentence.startsWith("______")
+          ? currentItem.word.charAt(0).toUpperCase() + currentItem.word.slice(1)
+          : currentItem.word;
+        quizDef.innerHTML = currentItem.quizSentence.replace(
+          "______",
+          `<strong style="color:#059669; text-decoration:underline;">${formattedAnswer}</strong>`
+        );
+      }
+    }
+
+    function handleMcqAnswer(clickedBtn, isCorrect, currentItem) {
+      if (answered) return;
+      answered = true;
+
+      const allBtns = mcqOptions.querySelectorAll(".mcq-btn");
+      allBtns.forEach(b => {
+        b.disabled = true;
+        if (b.textContent.toLowerCase() === currentItem.word.toLowerCase()) {
+          b.classList.add("correct");
+        }
+      });
+
+      revealFilledSentence(currentItem);
+
+      if (isCorrect) {
+        score++;
+        streak++;
+        feedbackBox.classList.add("feedback-correct");
+        feedbackBox.innerHTML = `✨ Correct! It is <strong>${currentItem.word}</strong>.`;
+      } else {
+        streak = 0;
+        missedWords.push(currentItem);
+        clickedBtn.classList.add("wrong");
+        feedbackBox.classList.add("feedback-wrong");
+        feedbackBox.innerHTML = `❌ Correct word: <strong>${currentItem.word}</strong>`;
+      }
+
+      updateQuizStats();
+      submitBtn.textContent = quizIndex < quizDeck.length - 1 ? "Next Card →" : "See Results 🎉";
+    }
+
+    function handleQuizSubmit() {
+      const current = quizDeck[quizIndex];
+
+      if (testType === "mcq") {
+        if (!answered) {
+          answered = true;
+          streak = 0;
+          missedWords.push(current);
+          updateQuizStats();
+        }
+        advanceQuiz();
+        return;
+      }
+
+      if (!answered) {
+        const userAns = answerInput.value.trim().toLowerCase();
+        if (!userAns) {
+          answerInput.focus();
+          return;
+        }
+
+        answered = true;
+        answerInput.disabled = true;
+        revealFilledSentence(current);
+
+        if (userAns === current.word.toLowerCase()) {
+          score++;
+          streak++;
+          answerInput.classList.add("correct");
+          feedbackBox.classList.add("feedback-correct");
+          feedbackBox.innerHTML = `✨ Correct! <strong>${current.word}</strong>`;
+        } else {
+          streak = 0;
+          missedWords.push(current);
+          answerInput.classList.add("wrong");
+          feedbackBox.classList.add("feedback-wrong");
+          feedbackBox.innerHTML = `❌ Correct word: <strong>${current.word}</strong>`;
+        }
+
+        updateQuizStats();
+        submitBtn.textContent = quizIndex < quizDeck.length - 1 ? "Next Card →" : "See Results 🎉";
+      } else {
+        advanceQuiz();
+      }
+    }
+
+    function advanceQuiz() {
+      if (quizIndex < quizDeck.length - 1) {
+        quizIndex++;
+        renderQuizQuestion();
+      } else {
+        showQuizSummary();
+      }
+    }
+
+    function showQuizSummary() {
+      questionArea.classList.add("hidden");
+      summaryArea.classList.remove("hidden");
+      finalScore.textContent = `${score} / ${quizDeck.length}`;
+      const pct = Math.round((score / quizDeck.length) * 100);
+      summaryMessage.textContent = `You scored ${pct}%! ${
+        missedWords.length > 0
+          ? `You missed ${missedWords.length} word(s). Click "Practice Missed" to review them!`
+          : "Perfection! You mastered every single word!"
+      }`;
+      retryMissedBtn.style.display = missedWords.length > 0 ? "flex" : "none";
+      progressFill.style.width = "100%";
+    }
+
+    function switchSection(section) {
+      activeSection = section;
+      tabTopic.classList.toggle("active", section === "topic");
+      tabGlue.classList.toggle("active", section === "glue");
+      tabPractice.classList.toggle("active", section === "practice");
+
+      if (section === "practice") {
+        flashcardsView.classList.add("hidden");
+        practiceView.classList.remove("hidden");
+        practiceFilterBar.classList.remove("hidden");
+        startQuiz();
+      } else {
+        practiceView.classList.add("hidden");
+        practiceFilterBar.classList.add("hidden");
+        flashcardsView.classList.remove("hidden");
+
+        activeDeck = allWords.filter(w => w.cat === section);
+        currentIndex = 0;
+        isFlipped = false;
+        flashcard.classList.remove("is-flipped");
+        renderFlashcard();
+      }
+    }
+
+    tabTopic.addEventListener("click", () => switchSection("topic"));
+    tabGlue.addEventListener("click", () => switchSection("glue"));
+    tabPractice.addEventListener("click", () => switchSection("practice"));
+
+    cardScene.addEventListener("click", flipCard);
+    listenBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      speakWord(activeDeck[currentIndex].word);
+    });
+    prevBtn.addEventListener("click", () => changeCard(-1));
+    nextBtn.addEventListener("click", () => changeCard(1));
+    shuffleBtn.addEventListener("click", () => {
+      shuffleArray(activeDeck);
+      currentIndex = 0;
+      isFlipped = false;
+      flashcard.classList.remove("is-flipped");
+      renderFlashcard();
+    });
+
+    typeMcqBtn.addEventListener("click", () => {
+      testType = "mcq";
+      typeMcqBtn.classList.add("active");
+      typeWriteBtn.classList.remove("active");
+      startQuiz();
+    });
+
+    typeWriteBtn.addEventListener("click", () => {
+      testType = "write";
+      typeWriteBtn.classList.add("active");
+      typeMcqBtn.classList.remove("active");
+      startQuiz();
+    });
+
+    filterButtons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        filterButtons.forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        practiceFilter = btn.dataset.filter;
+        startQuiz();
+      });
+    });
+
+    submitBtn.addEventListener("click", handleQuizSubmit);
+    answerInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        handleQuizSubmit();
+      }
+    });
+
+    quizShuffleBtn.addEventListener("click", () => {
+      const list = getFilteredPracticeWords(practiceFilter);
+      shuffleArray(list);
+      startQuiz(list);
+    });
+
+    retryMissedBtn.addEventListener("click", () => startQuiz(missedWords));
+    restartTestBtn.addEventListener("click", () => startQuiz());
+
+    document.addEventListener("keydown", (e) => {
+      if (activeSection === "practice") return;
+      if (e.code === "Space") {
+        e.preventDefault();
+        flipCard();
+      } else if (e.code === "ArrowRight") {
+        changeCard(1);
+      } else if (e.code === "ArrowLeft") {
+        changeCard(-1);
+      }
+    });
+
+    renderFlashcard();
+  </script>
+</body>
+</html>
